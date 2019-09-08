@@ -1,0 +1,290 @@
+/**
+ *
+ * @author Citlalli
+ */
+ 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Scanner;
+
+/**
+ *
+ * @author Citlalli
+ */
+public class Main {
+    public static void main(String[] args){
+        Lista palabra=new Lista();
+        Lista contrasena=new Lista();
+        Scanner opc=new Scanner(System.in);
+        System.out.println("Debe elegir:1.Encriptar 2.Descencriptar: ");
+        int i=opc.nextInt();
+        if(i==1){
+        try{
+        FileReader fr=new FileReader("encriptar.txt");
+        BufferedReader br=new BufferedReader(fr);
+        String cadena;
+        int con=0;
+        while((cadena=br.readLine())!=null){
+        con++;
+            if(con==1){
+                palabra.insertarFinal(cadena);//crea la lista del primer numero
+            }else{
+                contrasena.insertarFinal(cadena);//crea la lista de la segunda cifra
+            }
+         }
+        }catch(Exception ex){
+        }            
+        palabra.codigo(contrasena);
+        }else{
+            if(i==2){
+        try{
+        FileReader fr=new FileReader("sincodigo.txt");
+        BufferedReader br=new BufferedReader(fr);
+        String cadena;
+        int con=0;
+        while((cadena=br.readLine())!=null){
+        con++;
+            if(con==1){
+                palabra.insertarFinal(cadena);//crea la lista del primer numero
+            }else{
+                contrasena.insertarFinal(cadena);//crea la lista de la segunda cifra
+            }
+         }
+        }catch(Exception ex){
+        }
+        palabra.quita(contrasena);
+            }
+        }
+    }
+}
+public class Lista {
+    Nodo inicio=null;
+    Nodo fin=null;
+
+    void insertarFinal(String cadena){
+        int cadenalarga;
+        char cha;
+        cadenalarga=cadena.length();
+        for (int i = 0; i <cadenalarga; i++) {
+            cha=cadena.charAt(i);
+            int ascci=cha;
+        Nodo nuevo=new Nodo();
+        nuevo.codigo=ascci;
+        nuevo.siguiente=null;
+        nuevo.anterior=null;
+            if(inicio==null){
+                inicio=nuevo;
+                fin=nuevo;
+            }else{
+                fin.siguiente=nuevo;
+                nuevo.anterior=fin;
+                fin=nuevo;
+            }
+    }
+}
+    void insertar(int elemento){
+    Nodo newnod=new Nodo();
+    newnod.codigo=elemento;
+    newnod.siguiente=null;
+    newnod.anterior=null;
+    if(inicio==null){
+        inicio=newnod;
+        fin=newnod;
+    }else{
+        inicio.anterior=newnod;
+        newnod.siguiente=inicio;
+        inicio=newnod;
+    }
+    }
+    
+    void rellena(int elemento){
+    Nodo newnod= new Nodo();
+    newnod.codigo=elemento;
+    newnod.siguiente=null;
+    newnod.anterior=null;
+    if(inicio==null){
+        inicio=newnod;
+        fin=newnod;
+    }else{
+        fin.siguiente=newnod;
+        newnod.anterior=fin;
+        fin=newnod;
+    }        
+    }
+    
+    void codigo(Lista lista2){
+        Nodo aux1=inicio;
+        Nodo aux2=lista2.inicio;
+        int contador=0,contador1=0;
+        while(aux1!=null){
+            contador++;
+            aux1=aux1.siguiente;
+        }
+        while(aux2!=null){
+            contador1++;
+            aux2=aux2.siguiente;
+        }
+        
+        Lista finalizo= new Lista();
+        int sum;
+        
+        
+        if(contador==contador1){
+        Nodo aux20=fin;
+        Nodo otro=lista2.fin;
+      
+        while((aux20!=null)&&(otro!=null)){
+            sum=aux20.codigo+otro.codigo;
+            finalizo.insertar(sum);
+            aux20=aux20.anterior;
+            otro=otro.anterior;
+        }
+        
+        
+        }else{
+            Nodo otro2=lista2.inicio; 
+            if(contador>contador1){
+                while((contador!=contador1)){
+                    lista2.rellena(otro2.codigo);
+                    otro2=otro2.siguiente;
+                    contador1++;
+                }
+            Nodo Prueba=fin;
+            Nodo dos=lista2.fin;
+            
+            while((Prueba!=null)&&(dos!=null)){
+                sum=Prueba.codigo+dos.codigo;
+                finalizo.insertar(sum);
+                Prueba=Prueba.anterior;
+                dos=dos.anterior;
+            }
+
+        
+            }else{
+                Nodo Prueba=inicio;
+                Nodo tres=lista2.inicio;
+                int cuenta=0;
+                if(contador<contador1){
+                    while(cuenta<contador){
+                        while((Prueba!=null)&&(tres!=null)){
+                        sum=Prueba.codigo+tres.codigo;
+                        finalizo.rellena(sum);
+                        Prueba=Prueba.siguiente;
+                        tres=tres.siguiente;
+                        }
+                        cuenta++;
+                    }
+
+                }
+            }
+        }
+        
+
+        Nodo ult=finalizo.inicio;
+        int cc=0,pop;
+            System.out.println("MENSAJE CODIFICADO:");
+        while(ult!=null){
+            pop=ult.codigo;
+            char c=(char)pop;
+            System.out.print(" "+c); 
+            ult=ult.siguiente;
+        }
+        
+    }
+    
+    void quita(Lista lista2){
+        Nodo aux1=inicio;
+        Nodo aux2=lista2.inicio;
+        int cc1=0,cc2=0;
+        while(aux1!=null){
+            cc1++;
+            aux1=aux1.siguiente;
+        }
+        while(aux2!=null){
+            cc2++;
+            aux2=aux2.siguiente;
+        }
+        
+        Lista ya= new Lista();
+        int suma,resta;
+        
+        
+        if(cc1==cc2){
+        Nodo casi=fin;
+        Nodo me=lista2.fin;
+        
+        while((casi!=null)&&(me!=null)){
+            resta=casi.codigo-me.codigo;
+            ya.insertar(resta);
+            casi=casi.anterior;
+            me=me.anterior;
+        }
+        
+     
+        }else{
+            Nodo op=lista2.inicio; 
+            if(cc1>cc2){
+                while((cc1!=cc2)){
+                    lista2.rellena(op.codigo);
+                    op=op.siguiente;
+                    cc2++;
+                }
+                    Nodo ppr=fin;
+                    Nodo help=lista2.fin;
+                    //hacer la suma del ascci
+                    while((ppr!=null)&&(help!=null)){
+                    resta=ppr.codigo-help.codigo;
+                    ya.insertar(resta);
+                        ppr=ppr.anterior;
+                        help=help.anterior;
+                    }
+
+        
+            }else{
+                Nodo kill=inicio;
+                Nodo me=lista2.inicio;
+                int vuelta=0;
+                if(cc1<cc2){
+                    while(vuelta<cc1){
+                        while((kill!=null)&&(me!=null)){
+                        resta=kill.codigo-me.codigo;
+                       ya.insertar(resta);
+                        kill=kill.siguiente;
+                        me=me.siguiente;
+                        }
+                        vuelta++;
+                    }
+
+                }
+            }
+        }
+        
+
+        Nodo que=ya.inicio;
+        int like=0,san;
+            System.out.println("MENSAJE DESENCRIPTADO:");
+        while(que!=null){
+            san=que.codigo;
+            char c=(char)san;
+            System.out.print(" "+c); 
+            que=que.siguiente;
+        }
+             
+    }
+
+    
+    void imprimir(){
+        Nodo aux=inicio;
+        while(aux!=null){
+            System.out.print(" "+aux.codigo);
+            aux=aux.siguiente;
+        }
+    }
+ 
+}
+public class Nodo {
+    char letra;
+    int codigo;
+    Nodo siguiente;
+    Nodo anterior;
+}
