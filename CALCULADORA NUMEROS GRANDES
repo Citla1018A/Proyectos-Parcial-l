@@ -1,0 +1,277 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+/**
+ *
+ * @author Citlalli
+ */
+public class Main {
+    public static void main(String[] args){
+         Lista num1= new Lista();
+         Lista num2=new Lista();
+    try{
+        FileReader fr=new FileReader("CalcGrande.txt");
+        BufferedReader br=new BufferedReader(fr);
+        String cadena;
+        int con=0;
+        while((cadena=br.readLine())!=null){
+        con++;
+        if(con==1){
+            num1.insertar(cadena);//crea la lista del primer numero
+        }else{
+            num2.insertar(cadena);//crea la lista de la segunda cifra
+        }
+        
+        }
+    }catch(Exception ex){
+    }
+
+        System.out.println("SUMA:");
+    num1.sumar(num2);
+            System.out.println("\n");
+        System.out.println("RESTA:");
+    num1.restar(num2);
+            System.out.println("\n");
+        System.out.println("DIVISION:");    
+    num1.divide(num2);
+            System.out.println("\n");
+        System.out.println("MULTIPLICACIÓN:");
+    num1.multiplica(num2);
+    
+    }
+}
+
+public class Nodo {
+    int dato;
+    Nodo siguiente;
+    Nodo anterior;
+}
+public class Lista {
+    Nodo inicio=null;
+ Nodo fin=null;
+ 
+    void insertarInicio(int dato){
+    Nodo nuevo=new Nodo();
+    nuevo.dato=dato;
+    nuevo.siguiente=null;
+    nuevo.anterior=null;
+    if(inicio==null){
+        inicio=nuevo;
+        fin=nuevo;
+    }else{
+        inicio.anterior=nuevo;
+        nuevo.siguiente=inicio;
+        inicio=nuevo;
+    }        
+    }
+    
+    void insertar(String cadena){
+        int i,long1,m;
+        char u;
+        long1=cadena.length(); //tamaño de la cadena
+        m=0;
+       for(i=0;i<long1;i++){
+           u=cadena.charAt(i);
+        switch(u){
+            case '0': m=0;
+                break; 
+            case '1': m=1;
+                break;
+            case '2': m=2;
+                break;
+            case '3': m=3;
+                break;
+            case '4': m=4;
+                break;
+            case '5': m=5;
+                break;
+            case '6': m=6;
+                break;
+            case '7': m=7;
+                break;
+            case '8': m=8;
+                break;
+            case '9': m=9;
+                break;
+        }
+        Nodo nuevo=new Nodo();//crea la lista 
+        nuevo.dato=m;
+        nuevo.siguiente=null;
+        nuevo.anterior=null;
+    if(inicio==null){
+        inicio=nuevo;
+        fin=nuevo;
+    }else{
+        fin.siguiente=nuevo;
+        nuevo.anterior=fin;
+        fin=nuevo;
+    }  
+    }
+}
+    
+    void sumar(Lista lista2){
+        Lista suma= new Lista();
+        Nodo uno=inicio;
+        Nodo aux1=fin;
+        Nodo dos=lista2.inicio;
+        Nodo aux2=lista2.fin;
+        int t,e=0,r;
+        
+        while((aux1!=null)&&(aux2!=null)){
+            t=aux1.dato+aux2.dato+e;
+            if(t>9){
+                if(aux1!=inicio && aux2!=inicio){
+                e=t/10;
+                r=t%10;
+                t=t-e*10;
+                suma.insertarInicio(t); 
+                }else{
+                    suma.insertarInicio(t);
+                }
+            }else{
+                e=0;
+                suma.insertarInicio(t);
+            }
+            aux1=aux1.anterior;
+            aux2=aux2.anterior; 
+        }
+        
+        System.out.println("SUMA: ");
+        Nodo aux=suma.inicio;
+        while(aux!=null){
+            System.out.print(aux.dato);
+            aux=aux.siguiente;
+        }
+        
+    }
+        
+    void restar(Lista lista2){
+        Lista resta= new Lista();
+        Nodo uno=inicio;
+        Nodo aux1=fin;
+        Nodo dos=lista2.inicio;
+        Nodo aux2=lista2.fin;
+        int sum,co=0,res;
+        
+        while((aux1!=null)&&(aux2!=null)){
+            if(aux1.dato>=aux2.dato){
+                sum=aux1.dato-aux2.dato;
+                resta.insertarInicio(sum);
+                aux1=aux1.anterior;
+                aux2=aux2.anterior; 
+            }else{
+                aux1.dato=aux1.dato+10;
+                sum=(aux1.dato)-aux2.dato;
+
+                resta.insertarInicio(sum);
+                aux1=aux1.anterior;
+                aux1.dato=aux1.dato-1;
+                aux2=aux2.anterior;
+            }
+            
+            
+        }
+
+        System.out.println("\nRESTA: ");
+        Nodo aux10=resta.inicio;
+        while(aux10!=null){
+            System.out.print(aux10.dato);
+            aux10=aux10.siguiente;
+        }
+                
+                
+    }
+    
+    void multiplica(Lista lista2){
+      int conta=0,cuenta=0;
+       Nodo aux1=inicio;
+       Nodo aux2=lista2.inicio;
+       while(aux1!=null){
+           aux1=aux1.siguiente;
+           conta++;
+       }
+        while(aux2!=null){
+           aux2=aux2.siguiente;
+           cuenta++;
+       }
+       
+       Nodo aux4=inicio;
+       int pow=conta-1;
+       int op,adentro=0;
+       while(aux4!=null){
+           op=(aux4.dato)*((int)Math.pow(10, pow));
+           aux4=aux4.siguiente;
+           pow--;
+           adentro+=op;    
+       }
+      
+ 
+       Nodo aux5=lista2.inicio;
+       int pow2=cuenta-1;
+       int op2,afuera=0;
+       while(aux5!=null){
+           op2=(aux5.dato)*((int)Math.pow(10, pow2));
+           aux5=aux5.siguiente;
+           pow2--;
+           afuera+=op2;    
+       }
+       //System.out.println("numAfuera"+numAfuera);
+       double resultado;
+       resultado=adentro*afuera;
+
+       System.out.println("MULTIPLICACIÓN"+resultado);
+    }
+ 
+    
+   void divide(Lista lista2){
+       int conta=0,cuenta=0;
+       Nodo aux1=inicio;
+       Nodo aux2=lista2.inicio;
+       while(aux1!=null){
+           aux1=aux1.siguiente;
+           conta++;
+       }
+        while(aux2!=null){
+           aux2=aux2.siguiente;
+           cuenta++;
+       }
+       
+       Nodo aux4=inicio;
+       int pow=conta-1;
+       int operacion,adentro=0;
+       while(aux4!=null){
+           operacion=(aux4.dato)*((int)Math.pow(10, pow));
+           aux4=aux4.siguiente;
+           pow--;
+           adentro+=operacion;    
+       }
+       
+ 
+       Nodo aux5=lista2.inicio;
+       int pow2=cuenta-1;
+       int ope2,afuera=0;
+       while(aux5!=null){
+           ope2=(aux5.dato)*((int)Math.pow(10, pow2));
+           aux5=aux5.siguiente;
+           pow2--;
+           afuera+=ope2;    
+       }
+      
+       int resultado,residuo;
+       resultado=adentro/afuera;
+       residuo=adentro%afuera;
+       System.out.println("COCIENTE"+resultado);
+       System.out.println("RESIDUO"+residuo);
+}
+   
+   
+     void imprimir(){
+        Nodo aux=inicio;
+        while(aux!=null){
+            System.out.print(aux.dato+" ");
+            aux=aux.siguiente;
+           
+        }
+        
+    }
+}
