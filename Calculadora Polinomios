@@ -1,0 +1,269 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+/**
+ *
+ * @author Citlalli
+ */
+public class Main {
+     public static void main(String[] args){
+       Lista lista1=new Lista();
+       Lista lista2=new Lista(); 
+       Integer num1=0,num2=0,c,e,vuelta=0;
+        
+    try{
+        
+        int con=0;
+        FileReader fr=new FileReader("calculadorapoli.txt");
+        BufferedReader br=new BufferedReader(fr);
+        String cadena;
+        
+        while((cadena=br.readLine())!=null){
+            
+            con++;
+        if(con==1){ 
+        String[] aux=cadena.split(" "); 
+            num1=Integer.valueOf(aux[0]); 
+            
+            num2=Integer.valueOf(aux[1]);
+        }else{ 
+
+        String[] val=cadena.split(" "); 
+        con--;
+            for (int i = 0; i < con; i++) {
+                c=Integer.valueOf(val[0]);
+                e=Integer.valueOf(val[1]);
+               
+                vuelta++;
+                if((vuelta<=num1)){ 
+                    lista1.insertarFinal(c, e);
+                }else{ 
+                    lista2.insertarFinal(c, e);
+                }
+            }
+        }
+        }
+
+    }catch(Exception ex){
+    }
+        System.out.println("Polinomio 1:");
+        lista1.imprimir();
+        System.out.println("\n");
+        System.out.println("Polinomio 2:");
+        lista2.imprimir();
+        System.out.println("\n");
+        System.out.println("SUMA:");
+        lista1.sumar(lista2);
+        System.out.println("\n");
+        System.out.println("RESTA:");
+        lista1.restar(lista2);
+        System.out.println("\n");
+        System.out.println("MULTIPLICACIÓN:");
+        lista1.multiplica(lista2);
+
+    
+}
+}
+public class Nodo {
+    int coeficiente;
+    int exponente;
+    Nodo siguiente;
+    Nodo anterior;
+}
+public class Lista {
+     Nodo inicio=null;
+    Nodo fin=null;
+
+    void insertarFinal(int coeficiente,int exponente){ // crea la lista en el orden que metes los datos
+        Nodo nuevo=new Nodo();
+        nuevo.coeficiente=coeficiente;
+        nuevo.exponente=exponente;
+        nuevo.siguiente=null;
+        nuevo.anterior=null;
+    if(inicio==null){
+        inicio=nuevo;
+        fin=nuevo;
+    }else{
+        fin.siguiente=nuevo;
+        nuevo.anterior=fin;
+        fin=nuevo;
+    }
+    }
+    
+
+    
+    void multiplica(Lista lista2){ 
+        Lista exp=new Lista();//crea lista  guardar resultado
+        Nodo aux1=fin;//  multiplica como se hace normalmente
+        Nodo aux2=lista2.fin; 
+       // Integer auxCo,auxE;
+        Integer newCoef,newEx,vuelta=0;
+        while(aux2!=null){
+            aux1=fin;
+        while(aux1!=null){
+           newCoef=(aux2.coeficiente)*(aux1.coeficiente);
+           newEx=(aux2.exponente)+(aux1.exponente);
+           exp.insertarFinal(newCoef, newEx);
+           aux1=aux1.anterior;
+        }
+        aux2=aux2.anterior;
+        }
+        simplifica(exp);
+        Nodo auxp=exp.inicio;
+        while(auxp!=null){
+            if(auxp.coeficiente>0){
+                if(auxp.exponente==0){
+                System.out.print(" +"+auxp.coeficiente);
+                }
+                else{
+                    System.out.print(" +"+auxp.coeficiente+"x^"+auxp.exponente+" ");
+                }
+            }else{
+                if(auxp.exponente==0){
+                System.out.print(auxp.coeficiente);
+                }else{
+                System.out.print(auxp.coeficiente+"x"+auxp.exponente+" ");   
+                }
+            }
+            auxp=auxp.siguiente;
+        }
+        
+    }
+    
+
+    
+   void simplifica(Lista lista){
+        Nodo aux=lista.inicio;
+        Nodo aux2=aux.siguiente;
+        Nodo aux3=null;
+        Nodo aux4=null;
+        while(aux!=null){
+            aux2=aux.siguiente;
+            while(aux2!=null){
+                if(aux.exponente==aux2.exponente){
+                    aux.coeficiente=aux.coeficiente+aux2.coeficiente;
+                    aux3=aux2.anterior;
+                    aux3.siguiente=aux2.siguiente;
+                    aux4=aux2.siguiente;
+                    aux4.anterior=aux3;
+                    aux2=aux4;
+                    
+                }else{
+                    aux2=aux2.siguiente;
+                }
+                
+            }
+            aux=aux.siguiente;       
+        }   
+   }
+
+   void sumar(Lista lista2){
+       Nodo aux1=inicio;
+       Nodo aux11=lista2.inicio;
+       Lista lisum=new Lista();
+       while(aux1!=null){
+           lisum.insertarFinal(aux1.coeficiente, aux1.exponente);
+           aux1=aux1.siguiente;
+       }
+       while(aux11!=null){
+           lisum.insertarFinal(aux11.coeficiente,aux11.exponente);
+           aux11=aux11.siguiente;
+       }
+
+       Nodo aux=lisum.inicio;
+        Nodo aux2=aux.siguiente;
+        Nodo aux3=null;
+        Nodo aux4=null;
+        //System.out.println("sdf");
+        while(aux!=null){
+           aux2=aux.siguiente;
+            while(aux2!=null){
+                if(aux.exponente==aux2.exponente){
+                    aux.coeficiente=aux.coeficiente+aux2.coeficiente;
+                    aux3=aux2.anterior;
+                    aux3.siguiente=aux2.siguiente;
+                    aux4=aux2.siguiente;
+                    aux2=aux4;
+                }else{
+                    aux2=aux2.siguiente;
+                }
+                
+            }
+            aux=aux.siguiente;       
+        }   
+       Nodo exp=lisum.inicio;
+       while(exp.siguiente!=null){
+            if(exp.coeficiente>0){
+                if(exp.exponente==0){
+                System.out.print(" +"+exp.coeficiente);
+                }
+                else{
+                    System.out.print(" +"+exp.coeficiente+"x^"+exp.exponente+" ");
+                }
+            }else{
+                if(exp.exponente==0){
+                System.out.print(exp.coeficiente);
+                }else{
+                System.out.print(exp.coeficiente+"x"+exp.exponente+" ");   
+                }
+            }
+            exp=exp.siguiente;
+       }
+       
+   }
+
+   void restar(Lista lista2){
+       Nodo aux1=inicio;
+       Nodo aux9=lista2.inicio;
+       Lista lisuma=new Lista();
+       while(aux1!=null){
+           lisuma.insertarFinal(aux1.coeficiente, aux1.exponente);
+           aux1=aux1.siguiente;
+       }
+       while(aux9!=null){
+           lisuma.insertarFinal(aux9.coeficiente,aux9.exponente);
+           aux9=aux9.siguiente;
+       }
+
+       Nodo aux=lisuma.inicio;
+        Nodo aux2=aux.siguiente;
+        Nodo aux3=null;
+        Nodo aux4=null;
+        //System.out.println("sdf");
+        while(aux!=null){
+           aux2=aux.siguiente;
+            while(aux2!=null){
+                if(aux.exponente==aux2.exponente){
+                    aux.coeficiente=aux.coeficiente-aux2.coeficiente;
+                    aux3=aux2.anterior;
+                    aux3.siguiente=aux2.siguiente;
+                    aux4=aux2.siguiente;
+                    aux2=aux4;
+                }else{
+                    aux2=aux2.siguiente;
+                }
+                
+            }
+            aux=aux.siguiente;       
+        }   
+       Nodo exp=lisuma.inicio;
+       while(exp.siguiente!=null){
+            if(exp.coeficiente>0){
+                if(exp.exponente==0){
+                System.out.print(" +"+exp.coeficiente);
+                }
+                else{
+                    System.out.print(" +"+exp.coeficiente+"x^"+exp.exponente+" ");
+                }
+            }else{
+                if(exp.exponente==0){
+                System.out.print(exp.coeficiente);
+                }else{
+                System.out.print(exp.coeficiente+"x"+exp.exponente+" ");   
+                }
+            }
+            exp=exp.siguiente;
+           
+       }
+              
+   }
